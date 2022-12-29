@@ -1,46 +1,48 @@
-version: '3'
 services:
   jellyfin:
-    image: linuxserver/jellyfin:10.8
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Asia/Shanghai
+    image: jellyfin/jellyfin
     volumes:
-      - ./jellyfin/config:/config
+      - ./jellyfin/data:/data
+      - ./jellyfin/config:/config # seperate data and config
+      - ./jellyfin/cache:/cache
+      - ./jellyfin/log:/log
+      - ./jellyfin/fallbackfonts:/fallbackfonts # fix chinese subtitle
       - ./jellyfin/media:/media
     ports:
-      - 3900:8096
-    restart: unless-stopped
+      - 27964:27964
+    user: ${UGID:?err}
+    userns_mode: keep-id # currently not implemented by podman-compose, use `PODMAN_USERNS=keep-id podman-compose up`
+    entrypoint: ["/jellyfin/jellyfin", "-d", "/data", "-C", "/cache", "-c", "/config", "-l", "/log", "--ffmpeg", "/usr/lib/jellyfin-ffmpeg/ffmpeg"]
+    #restart: no
   sonarr:
-    image: linuxserver/sonarr:3
+    image: linuxserver/sonarr
     ports:
       - 3921:8989
     volumes:
       - ./sonarr/config:/config
       - ./sonarr:/data
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=0
+      - PGID=0
       - TZ=Asia/Shanghai
     restart: unless-stopped
   jackett:
-    image: linuxserver/jackett:0.20
+    image: linuxserver/jackett
     ports:
       - 3920:9117
     volumes:
       - ./jackett/config:/config
       - ./jackett/downloads:/downloads
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=0
+      - PGID=0
       - TZ=Asia/Shanghai
     restart: unless-stopped
   qbittorrent:
-    image: linuxserver/qbittorrent:4.5
+    image: linuxserver/qbittorrent
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=0
+      - PGID=0
       - TZ=Asia/Shanghai
       - WEBUI_PORT=8080
     volumes:

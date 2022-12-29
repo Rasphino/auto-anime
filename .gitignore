@@ -1,0 +1,8 @@
+jellyfin/cache/*
+!jellyfin/cache/.gitkeep
+jellyfin/config/*
+!jellyfin/config/network.xml
+jellyfin/data/*
+!jellyfin/data/.gitkeep
+jellyfin/log/*
+!jellyfin/log/.gitkeep
