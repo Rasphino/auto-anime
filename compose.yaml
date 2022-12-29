@@ -1,26 +1,11 @@
 services:
-  jellyfin:
-    image: jellyfin/jellyfin
-    volumes:
-      - ./jellyfin/data:/data
-      - ./jellyfin/config:/config # seperate data and config
-      - ./jellyfin/cache:/cache
-      - ./jellyfin/log:/log
-      - ./jellyfin/fallbackfonts:/fallbackfonts # fix chinese subtitle
-      - ./jellyfin/media:/media
-    ports:
-      - 27964:27964
-    user: ${UGID:?err}
-    userns_mode: keep-id # currently not implemented by podman-compose, use `PODMAN_USERNS=keep-id podman-compose up`
-    entrypoint: ["/jellyfin/jellyfin", "-d", "/data", "-C", "/cache", "-c", "/config", "-l", "/log", "--ffmpeg", "/usr/lib/jellyfin-ffmpeg/ffmpeg"]
-    #restart: no
   sonarr:
     image: linuxserver/sonarr
     ports:
-      - 3921:8989
+      - 28681:28681
     volumes:
       - ./sonarr/config:/config
-      - ./sonarr:/data
+      - ./dist:/data
     environment:
       - PUID=0
       - PGID=0
@@ -29,13 +14,14 @@ services:
   jackett:
     image: linuxserver/jackett
     ports:
-      - 3920:9117
+      - 26398:26398
     volumes:
       - ./jackett/config:/config
       - ./jackett/downloads:/downloads
     environment:
       - PUID=0
       - PGID=0
+      - AUTO_UPDATE=true
       - TZ=Asia/Shanghai
     restart: unless-stopped
   qbittorrent:
@@ -44,12 +30,12 @@ services:
       - PUID=0
       - PGID=0
       - TZ=Asia/Shanghai
-      - WEBUI_PORT=8080
+      - WEBUI_PORT=22573
     volumes:
       - ./qbittorrent/config:/config
-      - ./qbittorrent/downloads:/downloads
+      - ./dist:/data
     ports:
-      - 3910:8080
+      - 22573:22573
       - 39881:6881
       - 39881:6881/udp
     restart: unless-stopped
