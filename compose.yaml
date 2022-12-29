@@ -1,4 +1,26 @@
 services:
+  auto-bangumi:
+    image: estrellaxd/auto_bangumi:latest
+    ports:
+      - 7892:7892
+    volumes:
+      - auto-bangumi/config:/config
+    environment:
+      - TZ=Asia/Shanghai
+      # https://github.com/EstrellaXD/Auto_Bangumi/wiki/%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E/#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AF%B4%E6%98%8E
+      - AB_INTERVAL_TIME=1800
+      - AB_DOWNLOADER_HOST=localhost:22573
+      - AB_DOWNLOADER_USERNAME=${QB_USERNAME}
+      - AB_DOWNLOADER_PASSWORD=${QB_PASSWOWD}
+      - AB_DOWNLOAD_PATH=/data/downloads/auto-bangumi
+      - AB_METHOD=advance
+      - AB_GROUP_TAG=True
+      - AB_NOT_CONTAIN=720
+      - AB_RSS=${RSS}
+      - AB_DEBUG_MODE=False
+      - AB_EP_COMPLETE=True
+      - AB_ENABLE_TMDB=True
+    restart: unless-stopped
   sonarr:
     image: linuxserver/sonarr
     ports:
