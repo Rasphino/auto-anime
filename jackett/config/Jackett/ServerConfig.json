@@ -1,4 +1,6 @@
 {
   "Port": 26398,
-  "AllowExternal": true
+  "AllowExternal": true,
+  "BlackholeDir": "/downloads",
+  "FlareSolverrUrl": "localhost:3919"
 }

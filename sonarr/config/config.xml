@@ -1,0 +1,5 @@
+<Config>
+  <Port>28681</Port>
+  <UrlBase></UrlBase>
+  <BindAddress>*</BindAddress>
+</Config>
